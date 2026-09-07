@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: sanguoceheng-c09-beta
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: python3 bootstrap.py && pip install -r app/requirements.txt
+    startCommand: >-
+      sh -c 'cd app && export SGCH_ENV=production SGCH_HOST=0.0.0.0 SGCH_PORT="$PORT";
+      python3 migrations/001_initialize_databases.py && exec python3 start_game.py'
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: SGCH_ENV
+        value: production
+      - key: SGCH_HOST
+        value: 0.0.0.0
